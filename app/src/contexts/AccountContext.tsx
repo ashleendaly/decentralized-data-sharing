@@ -16,7 +16,11 @@ export const AccountContext = createContext<AccountContextType>({
   // address: "",
 });
 
-const AccountProvider = (children: JSX.Element): JSX.Element => {
+const AccountProvider = ({
+  children,
+}: {
+  children: JSX.Element;
+}): JSX.Element => {
   const [seedPhrase, setSeedPhrase] = useState<string>("");
 
   return (
