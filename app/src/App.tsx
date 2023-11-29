@@ -1,11 +1,11 @@
 import GenerateKeysView from "./components/GenerateKeysView";
-import AccountProvider from "./contexts/AccountContext";
+import WalletProvider from "./contexts/WalletContext";
 
 function App() {
   return (
-    <AccountProvider>
+    <WalletProvider>
       <GenerateKeysView />
-    </AccountProvider>
+    </WalletProvider>
   );
 }
 
