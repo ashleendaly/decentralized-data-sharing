@@ -4,4 +4,4 @@ pretty:
 
 .PHONY: dapp
 dapp:
-	cd app && pnpm dev
+	cd dapp && pnpm dev
