@@ -20,6 +20,10 @@ export default function RootLayout({
     <ThirdwebProvider
       clientId={process.env.THIRDWEB_CLIENT_ID}
       activeChain={"ethereum"}
+      authConfig={{
+        domain: process.env.APP_URL || "localhost:3000",
+        authUrl: "/api/auth",
+      }}
     >
       <html lang="en">
         <body className={inter.className}>{children}</body>
