@@ -104,3 +104,5 @@ Cargo.lock
 # VSCode settings
 .vscode/
 *.code-workspace
+
+.env
