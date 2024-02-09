@@ -1,10 +1,11 @@
 "use client";
 
-import { useStorageUpload } from "@/lib/thirdweb-dev";
+// import { useStorageUpload } from "@/lib/thirdweb-dev";
 import { useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Trash, Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface ipfsData {
   [key: string]: string;
@@ -13,7 +14,8 @@ interface ipfsData {
 export default function DataForm() {
   const [newProperty, setNewProperty] = useState<string>("");
   const [dataToUploadToIpfs, setDataToUploadToIpfs] = useState<ipfsData>({});
-  const { mutateAsync: upload, isLoading } = useStorageUpload();
+  // const { mutateAsync: upload } = useStorageUpload();
+  const router = useRouter();
 
   const handleAddNewProperty = (property: string) => {
     if (property != "") {
@@ -42,8 +44,11 @@ export default function DataForm() {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    const uris = await upload({ data: [dataToUploadToIpfs] });
-    console.log(uris);
+    // const uris = await upload({ data: [dataToUploadToIpfs] });
+    // console.log(uris);
+    router.push(
+      `/upload/${encodeURIComponent(JSON.stringify(dataToUploadToIpfs))}`
+    );
   };
 
   return (
