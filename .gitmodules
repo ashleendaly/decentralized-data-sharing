@@ -1,0 +1,6 @@
+[submodule "dapp/src/rabejs"]
+	path = dapp/src/rabejs
+	url = https://github.com/netgroup/rabejs
+[submodule "rabe-wasm/rabe"]
+	path = rabe-wasm/rabe
+	url = https://github.com/Fraunhofer-AISEC/rabe.git
