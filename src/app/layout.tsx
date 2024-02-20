@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThirdwebProvider } from "@/lib/thirdweb-dev";
+import { Sepolia } from "@thirdweb-dev/chains";
 import Header from "@/components/header";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -20,7 +21,7 @@ export default function RootLayout({
   return (
     <ThirdwebProvider
       clientId={process.env.THIRDWEB_CLIENT_ID}
-      activeChain={"ethereum"}
+      activeChain={Sepolia}
       authConfig={{
         domain: process.env.APP_URL || "localhost:3000",
         authUrl: "/api/auth",

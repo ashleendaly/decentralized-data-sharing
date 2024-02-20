@@ -1,11 +1,16 @@
 "use client";
 
-// import { useStorageUpload } from "@/lib/thirdweb-dev";
+import {
+  useContract,
+  useContractWrite,
+  useStorageUpload,
+} from "@/lib/thirdweb-dev";
+import init, { setup, encrypt } from "../../public/rabe/rabe_wasm";
 import { useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Trash, Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
+import wasmUrl from "../../wasm_config";
 
 interface ipfsData {
   [key: string]: string;
@@ -14,8 +19,31 @@ interface ipfsData {
 export default function DataForm() {
   const [newProperty, setNewProperty] = useState<string>("");
   const [dataToUploadToIpfs, setDataToUploadToIpfs] = useState<ipfsData>({});
-  // const { mutateAsync: upload } = useStorageUpload();
-  const router = useRouter();
+  const [policyString, setPolicyString] = useState<string>("");
+  const { mutateAsync: upload } = useStorageUpload();
+
+  const { contract } = useContract(
+    "0xe4f1D0F6529F7583AbBf97d2FB0400b49a887CaC"
+  );
+
+  const { mutateAsync: uploadSmartContract } = useContractWrite(
+    contract,
+    "upload"
+  );
+
+  const uploadToSmartContract = async (
+    ipfsHash: string,
+    policyString: string
+  ) => {
+    try {
+      const data = await uploadSmartContract({
+        args: [ipfsHash, policyString],
+      });
+      console.info("contract call successs", data);
+    } catch (err) {
+      console.error("contract call failure", err);
+    }
+  };
 
   const handleAddNewProperty = (property: string) => {
     if (property != "") {
@@ -42,17 +70,43 @@ export default function DataForm() {
     });
   };
 
+  const handleSetup = async () => {
+    return await init(wasmUrl).then(() => {
+      const result = setup();
+      const pk = JSON.parse(result[0]);
+      const msk = JSON.parse(result[1]);
+      return { pk, msk };
+    });
+  };
+
+  const handleEncrypt = async (
+    pk: string,
+    policyString: string,
+    plaintextString: string
+  ) => {
+    return init(wasmUrl).then(() => {
+      const plaintext = new TextEncoder().encode(plaintextString);
+      const result = encrypt(pk, policyString, plaintext);
+      const ciphertext = JSON.parse(result)["_ct"];
+      return ciphertext;
+    });
+  };
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    // const uris = await upload({ data: [dataToUploadToIpfs] });
-    // console.log(uris);
-    router.push(
-      `/upload/${encodeURIComponent(JSON.stringify(dataToUploadToIpfs))}`
+    const dataToUploadString = JSON.stringify(dataToUploadToIpfs);
+    const { pk } = await handleSetup();
+    const ciphertext = await handleEncrypt(
+      JSON.stringify(pk),
+      policyString,
+      dataToUploadString
     );
+    const uris = await upload({ data: [ciphertext] });
+    await uploadToSmartContract(uris[0], policyString);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col w-1/3">
+    <form onSubmit={handleSubmit} className="flex flex-col w-1/3 gap-5">
       <div className="flex items-center">
         <Input
           placeholder="Add property..."
@@ -79,6 +133,11 @@ export default function DataForm() {
           </div>
         );
       })}
+      <Input
+        placeholder="Write policy string..."
+        value={policyString}
+        onChange={(event) => setPolicyString(event.target.value)}
+      />
       <Button type="submit">Submit</Button>
     </form>
   );

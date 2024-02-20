@@ -8,11 +8,11 @@ export default function Header() {
   const connect = useConnect();
 
   return (
-    <div>
+    <div className="bg-slate-800 text-white p-3">
       {!address && (
         <button onClick={() => connect(metamaskConfig)}>Connect</button>
       )}
-      <pre>Connected Wallet: {address}</pre>
+      {address && <pre>Connected Wallet: {address}</pre>}
     </div>
   );
 }
