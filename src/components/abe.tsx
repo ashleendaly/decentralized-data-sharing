@@ -1,9 +1,6 @@
-"use client";
-
 import init, { setup, encrypt } from "../../public/rabe/rabe_wasm";
 import wasmUrl from "../../wasm_config";
 
-// eslint-disable-next-line @next/next/no-async-client-component
 const ABE = async () => {
   const handleSetup = async () => {
     return await init(wasmUrl).then(() => {
