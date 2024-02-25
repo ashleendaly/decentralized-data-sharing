@@ -1,17 +1,13 @@
 "use client";
 
-import { useAddress, useConnect, metamaskWallet } from "@thirdweb-dev/react";
+import { EthersContext } from "@/contexts/ethers";
+import { useContext } from "react";
 
 export default function Header() {
-  const metamaskConfig = metamaskWallet();
-  const address = useAddress();
-  const connect = useConnect();
+  const { address } = useContext(EthersContext);
 
   return (
     <div className="bg-slate-800 text-white p-3">
-      {!address && (
-        <button onClick={() => connect(metamaskConfig)}>Connect</button>
-      )}
       {address && <pre>Connected Wallet: {address}</pre>}
     </div>
   );
