@@ -8,6 +8,7 @@ export default function Header() {
 
   return (
     <div className="bg-slate-800 text-white p-3">
+      {!address && <p>Connecting Wallet...</p>}
       {address && <pre>Connected Wallet: {address}</pre>}
     </div>
   );
