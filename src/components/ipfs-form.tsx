@@ -1,35 +1,45 @@
-"use client";
+'use client';
 
 import {
   useContract,
   useContractWrite,
   useStorageUpload,
-} from "@/lib/thirdweb-dev";
-import init, { setup, encrypt } from "../../public/rabe/rabe_wasm";
-import { useState } from "react";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
-import { Trash, Plus } from "lucide-react";
-import wasmUrl from "../../wasm_config";
+} from '@/lib/thirdweb-dev';
+import init, { setup, encrypt } from '../../public/rabe/rabe_wasm';
+import { useEffect, useState } from 'react';
+import { Input } from './ui/input';
+import { Button } from './ui/button';
+import { Trash, Plus } from 'lucide-react';
+import wasmUrl from '../../wasm_config';
 
 interface ipfsData {
   [key: string]: string;
 }
 
 export default function DataForm() {
-  const [newProperty, setNewProperty] = useState<string>("");
+  const [newProperty, setNewProperty] = useState<string>('');
   const [dataToUploadToIpfs, setDataToUploadToIpfs] = useState<ipfsData>({});
-  const [policyString, setPolicyString] = useState<string>("");
+  const [policyString, setPolicyString] = useState<string>('');
+  const [pk, setPk] = useState<string>('');
   const { mutateAsync: upload } = useStorageUpload();
 
   const { contract } = useContract(
-    "0xe4f1D0F6529F7583AbBf97d2FB0400b49a887CaC"
+    '0xe4f1D0F6529F7583AbBf97d2FB0400b49a887CaC'
   );
 
   const { mutateAsync: uploadSmartContract } = useContractWrite(
     contract,
-    "upload"
+    'upload'
   );
+
+  useEffect(() => {
+    fetch('/api/init')
+      .then((response) => response.json())
+      .then((data) => {
+        setPk(data.pk);
+      })
+      .catch((error) => console.error('Error:', error));
+  }, []);
 
   const uploadToSmartContract = async (
     ipfsHash: string,
@@ -39,20 +49,20 @@ export default function DataForm() {
       const data = await uploadSmartContract({
         args: [ipfsHash, policyString],
       });
-      console.info("contract call successs", data);
+      console.info('contract call successs', data);
     } catch (err) {
-      console.error("contract call failure", err);
+      console.error('contract call failure', err);
     }
   };
 
   const handleAddNewProperty = (property: string) => {
-    if (property != "") {
+    if (property != '') {
       const propertyCapitalised = property[0].toUpperCase() + property.slice(1);
       setDataToUploadToIpfs((prev) => ({
         ...prev,
-        [propertyCapitalised]: "",
+        [propertyCapitalised]: '',
       }));
-      setNewProperty("");
+      setNewProperty('');
     }
   };
 
@@ -70,34 +80,25 @@ export default function DataForm() {
     });
   };
 
-  const handleSetup = async () => {
-    return await init(wasmUrl).then(() => {
-      const result = setup();
-      const pk = JSON.parse(result[0]);
-      const msk = JSON.parse(result[1]);
-      return { pk, msk };
-    });
-  };
-
   const handleEncrypt = async (
     pk: string,
     policyString: string,
     plaintextString: string
   ) => {
+    console.log(policyString);
     return init(wasmUrl).then(() => {
       const plaintext = new TextEncoder().encode(plaintextString);
       const result = encrypt(pk, policyString, plaintext);
-      const ciphertext = JSON.parse(result)["_ct"];
-      return ciphertext;
+      return result;
     });
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+
     const dataToUploadString = JSON.stringify(dataToUploadToIpfs);
-    const { pk } = await handleSetup();
     const ciphertext = await handleEncrypt(
-      JSON.stringify(pk),
+      pk,
       policyString,
       dataToUploadString
     );
