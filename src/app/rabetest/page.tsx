@@ -1,16 +1,16 @@
-'use client';
-import React, { useState, useEffect } from 'react';
+"use client";
+import React, { useState, useEffect } from "react";
 import init, {
   decrypt,
   setup,
   encrypt,
   keygen,
-} from '../../../public/rabe/rabe_wasm';
-import wasmUrl from '../../../wasm_config';
+} from "../../../public/rabe/rabe_wasm";
+import wasmUrl from "../../../wasm_config";
 
 const Page = () => {
   // Initialize state here
-  const [testResult, setTestResult] = useState('');
+  const [testResult, setTestResult] = useState("");
 
   useEffect(() => {
     const performAsyncOperations = async () => {
@@ -18,17 +18,17 @@ const Page = () => {
 
       const result = setup();
       const pk = result[0];
-      console.log('pk', pk);
+      console.log("pk", pk);
       const msk = result[1];
-      console.log('msk', msk);
+      console.log("msk", msk);
 
-      const pt = new TextEncoder().encode('encrypt me');
+      const pt = new TextEncoder().encode("encrypt me");
 
       const ciphertext = encrypt(pk, '"A"', pt);
-      console.log('ciphertext', ciphertext);
+      console.log("ciphertext", ciphertext);
 
-      const sk = keygen(pk, msk, JSON.stringify(['A']));
-      console.log('sk', sk);
+      const sk = keygen(pk, msk, JSON.stringify(["A"]));
+      console.log("sk", sk);
       const decryptedText = decrypt(sk, ciphertext);
       const newpt = new TextDecoder().decode(decryptedText);
 
@@ -39,7 +39,7 @@ const Page = () => {
   }, []);
 
   return (
-    <div>{testResult ? `Decrypted Text: ${testResult}` : 'Loading...'}</div>
+    <div>{testResult ? `Decrypted Text: ${testResult}` : "Loading..."}</div>
   );
 };
 

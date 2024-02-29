@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect, ReactNode } from "react";
 import { ethers } from "ethers";
 
-import AttributeTokenContract from "../contracts/AttributeToken.json";
+// import AttributeTokenContract from "../contracts/AttributeToken.json";
 
 type EthersContextType = {
   signer: ethers.providers.JsonRpcSigner | undefined;
