@@ -20,7 +20,7 @@ interface DataFormProps {
   pk: string;
 }
 
-export default function DataForm({ pk }: DataFormProps) {
+export default function UploadForm({ pk }: DataFormProps) {
   const [newProperty, setNewProperty] = useState<string>("");
   const [dataToUploadToIpfs, setDataToUploadToIpfs] = useState<ipfsData>({});
   const [policyString, setPolicyString] = useState<string>("");

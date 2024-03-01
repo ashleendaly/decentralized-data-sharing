@@ -1,16 +1,16 @@
 import React, { createContext, useState, useEffect, ReactNode } from "react";
 import { ethers } from "ethers";
 
-// import AttributeTokenContract from "../contracts/AttributeToken.json";
-
 type EthersContextType = {
   signer: ethers.providers.JsonRpcSigner | undefined;
-  address: string;
+  metaMaskAddresss: string;
+  metaMaskPk: string;
 };
 
 export const EthersContext = createContext<EthersContextType>({
   signer: undefined,
-  address: "",
+  metaMaskAddresss: "",
+  metaMaskPk: "",
 });
 
 interface EthersProviderProps {
@@ -22,7 +22,8 @@ const EthersProvider: React.FC<EthersProviderProps> = ({ children }) => {
     ethers.providers.JsonRpcSigner | undefined
   >(undefined);
 
-  const [address, setAddress] = useState<string>("");
+  const [metaMaskAddresss, setMetaMaskAddresss] = useState<string>("");
+  const [metaMaskPk, setMetaMaskPk] = useState<string>("");
 
   useEffect(() => {
     async function initializeEthers() {
@@ -32,7 +33,13 @@ const EthersProvider: React.FC<EthersProviderProps> = ({ children }) => {
         const signer = provider.getSigner();
         setSigner(signer);
         const address = await signer.getAddress();
-        setAddress(address);
+        setMetaMaskAddresss(address);
+
+        const pk = (await window.ethereum.request({
+          method: "eth_getEncryptionPublicKey",
+          params: [address],
+        })) as string;
+        setMetaMaskPk(pk);
       }
     }
 
@@ -40,7 +47,7 @@ const EthersProvider: React.FC<EthersProviderProps> = ({ children }) => {
   }, []);
 
   return (
-    <EthersContext.Provider value={{ signer, address }}>
+    <EthersContext.Provider value={{ signer, metaMaskAddresss, metaMaskPk }}>
       {children}
     </EthersContext.Provider>
   );

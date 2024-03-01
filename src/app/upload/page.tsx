@@ -1,4 +1,4 @@
-import DataForm from "@/components/ipfs-form";
+import UploadForm from "@/components/upload-form";
 import { createClient } from "@/lib/supabase";
 
 const Upload = async () => {
@@ -9,9 +9,10 @@ const Upload = async () => {
     .eq("type", "pk");
   if (!data) return;
   const pk = data[0]["key"];
+
   return (
-    <div className="p-2">
-      <DataForm pk={pk} />
+    <div className="grid place-items-center h-[95vh]">
+      <UploadForm pk={pk} />
     </div>
   );
 };
