@@ -1,9 +1,17 @@
-import DataForm from '@/components/ipfs-form';
+import DataForm from "@/components/ipfs-form";
+import { createClient } from "@/lib/supabase";
 
-const Upload = () => {
+const Upload = async () => {
+  const client = createClient();
+  const { data } = await client
+    .from("keys")
+    .select("type,key")
+    .eq("type", "pk");
+  if (!data) return;
+  const pk = data[0]["key"];
   return (
     <div className="p-2">
-      <DataForm />
+      <DataForm pk={pk} />
     </div>
   );
 };

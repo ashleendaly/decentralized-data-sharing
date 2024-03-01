@@ -6,7 +6,7 @@ import {
   useStorageUpload,
 } from "@/lib/thirdweb-dev";
 import init, { encrypt } from "../../public/rabe/rabe_wasm";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Trash, Plus } from "lucide-react";
@@ -16,11 +16,14 @@ interface ipfsData {
   [key: string]: string;
 }
 
-export default function DataForm() {
+interface DataFormProps {
+  pk: string;
+}
+
+export default function DataForm({ pk }: DataFormProps) {
   const [newProperty, setNewProperty] = useState<string>("");
   const [dataToUploadToIpfs, setDataToUploadToIpfs] = useState<ipfsData>({});
   const [policyString, setPolicyString] = useState<string>("");
-  const [pk, setPk] = useState<string>("");
   const { mutateAsync: upload } = useStorageUpload();
 
   const { contract } = useContract(
@@ -128,7 +131,9 @@ export default function DataForm() {
       <Input
         placeholder="Write policy string..."
         value={policyString}
-        onChange={(event) => setPolicyString(event.target.value)}
+        onChange={(event: ChangeEvent<HTMLInputElement>) =>
+          setPolicyString(event.target.value)
+        }
       />
       <Button type="submit">Submit</Button>
     </form>
