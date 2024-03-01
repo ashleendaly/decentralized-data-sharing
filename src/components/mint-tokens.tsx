@@ -7,10 +7,12 @@ import AttributeTokenContract from "../contracts/AttributeToken.json";
 import { EthersContext } from "@/contexts/ethers";
 
 export default function MintTokens() {
+  const contractAddress = process.env.NEXT_PUBLIC_ATTRIBUTE_CONTRACT_ADDRESS;
+
   const { signer } = useContext(EthersContext);
   const [id, setId] = useState(0);
   const [amount, setAmount] = useState(0);
-  const contractAddress = process.env.NEXT_PUBLIC_ATTRIBUTE_CONTRACT_ADDRESS;
+
   if (!signer) return;
   if (!contractAddress) return;
 

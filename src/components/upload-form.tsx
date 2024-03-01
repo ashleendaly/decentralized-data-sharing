@@ -4,7 +4,7 @@ import {
   useContract,
   useContractWrite,
   useStorageUpload,
-} from "@/lib/thirdweb-dev";
+} from "@thirdweb-dev/react";
 import init, { encrypt } from "../../public/rabe/rabe_wasm";
 import { ChangeEvent, useState } from "react";
 import { Input } from "./ui/input";
