@@ -1,23 +1,36 @@
-import { NextResponse } from 'next/server';
-import init, { keygen } from '../../../../public/rabe/rabe_wasm';
-import wasmUrl from '../../../../wasm_config';
+import { NextResponse } from "next/server";
+import init, { keygen } from "../../../../public/rabe/rabe_wasm";
+import wasmUrl from "../../../../wasm_config";
+import { z } from "zod";
+import { createClient } from "@/lib/supabase";
+import { ethEncrypt } from "@/utils/metamask";
+
+const keygenSchema = z.object({
+  pol_json: z.string(),
+  ethPk: z.string(),
+});
 
 export async function POST(request: Request) {
-  const data = await request.json();
-  const pol_json = JSON.stringify(data);
+  const req = await request.json();
+  const { pol_json, ethPk } = keygenSchema.parse(req);
+  const publicKey = Buffer.from(ethPk, "base64");
+  const client = createClient();
+  const { data: keys } = await client.from("keys").select("type,key");
 
-  const response = await fetch(`${process.env.APPLICATION_DOMAIN}/api/init`);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch: ${response.statusText}`);
-  }
-  const { pk, msk } = await response.json();
+  const pk = keys?.find((key) => {
+    return key["type"] == "pk";
+  });
 
-  console.log(pk);
-  console.log(msk);
+  const msk = keys?.find((key) => {
+    return key["type"] == "msk";
+  });
 
   return await init(wasmUrl).then(() => {
-    const result = keygen(pk, msk, pol_json); // pk_json: string, msk_json: string, pol_json: string
-    const sk = result;
-    return NextResponse.json({ sk });
+    if (pk && msk) {
+      const result = keygen(pk["key"], msk["key"], pol_json); // pk_json: string, msk_json: string, pol_json: string
+      const sk = Buffer.from(result);
+      const encryptedSk = ethEncrypt(publicKey, sk);
+      return NextResponse.json({ encryptedSk });
+    }
   });
 }
