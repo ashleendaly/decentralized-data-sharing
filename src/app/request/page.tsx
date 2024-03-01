@@ -8,8 +8,9 @@ import { EthersContext } from "@/contexts/ethers";
 import { ethDecrypt } from "@/utils/metamask";
 
 const Page = () => {
-  const [ipfsUri, setIpfsUri] = useState<string | undefined>("");
+  const [ipfsUri, setIpfsUri] = useState<string>("");
   const [mySk, setMySk] = useState<string | undefined>("");
+  const [decryptedIpfs, setDecryptedIpfs] = useState("");
   const { address } = useContext(EthersContext);
   const storage = useStorage();
 
@@ -38,14 +39,12 @@ const Page = () => {
       const ipfsDownload = await storage?.download(ipfsUri);
       if (!ipfsDownload) return;
       const result = await fetch(ipfsDownload.url);
-      const ct_cp = await result.json();
-      const ct_cp_json = JSON.stringify(ct_cp);
-      console.log(ct_cp_json);
-      console.log(mySk);
+      const ct = await result.text();
       return await init(wasmUrl).then(() => {
         if (mySk) {
-          const result = decrypt(mySk, ct_cp_json);
-          console.log(result);
+          const result = decrypt(mySk, ct);
+          const decryptedIpfs = new TextDecoder().decode(result);
+          setDecryptedIpfs(decryptedIpfs);
         }
       });
     }
@@ -58,6 +57,7 @@ const Page = () => {
         onChange={(event) => setIpfsUri(event.target.value)}
       ></input>
       <button onClick={handleDecrypt}>Test</button>
+      {decryptedIpfs !== "" && <div>{decryptedIpfs}</div>}
     </div>
   );
 };

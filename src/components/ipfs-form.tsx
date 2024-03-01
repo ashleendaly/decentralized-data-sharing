@@ -91,6 +91,7 @@ export default function DataForm({ pk }: DataFormProps) {
     event.preventDefault();
 
     const dataToUploadString = JSON.stringify(dataToUploadToIpfs);
+    console.log(dataToUploadString);
     const ciphertext = await handleEncrypt(
       pk,
       policyString,

@@ -14,13 +14,12 @@ export async function POST(request: Request) {
   const req = await request.json();
   const { pol_json, ethPk } = keygenSchema.parse(req);
   const publicKey = Buffer.from(ethPk, "base64");
+
   const client = createClient();
   const { data: keys } = await client.from("keys").select("type,key");
-
   const pk = keys?.find((key) => {
     return key["type"] == "pk";
   });
-
   const msk = keys?.find((key) => {
     return key["type"] == "msk";
   });
