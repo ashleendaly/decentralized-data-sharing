@@ -11,15 +11,16 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 const Page = () => {
+  const storage = useStorage();
+  const { metaMaskAddresss, metaMaskPk } = useContext(EthersContext);
+
   const [ipfsUri, setIpfsUri] = useState<string>("");
   const [secretKey, mySecretKey] = useState<string>("");
   const [decryptedIpfs, setDecryptedIpfs] = useState("");
-  const { metaMaskAddresss, metaMaskPk } = useContext(EthersContext);
-  const storage = useStorage();
 
   useEffect(() => {
     const getAndDecryptSecretKey = async () => {
-      const data = await generateEncryptedSecretKey(["A"], metaMaskPk);
+      const data = await generateEncryptedSecretKey(["A"], metaMaskPk!); // GET attribute list via smart contract
       const encryptedSk = data["encryptedSk"];
       const decryptedSk = await ethDecrypt(metaMaskAddresss, encryptedSk);
       return decryptedSk;

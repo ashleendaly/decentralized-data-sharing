@@ -1,0 +1,14 @@
+{
+  "name": "rabe-wasm",
+  "version": "0.1.0",
+  "files": [
+    "rabe_wasm_bg.wasm",
+    "rabe_wasm.js",
+    "rabe_wasm.d.ts"
+  ],
+  "module": "rabe_wasm.js",
+  "types": "rabe_wasm.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}

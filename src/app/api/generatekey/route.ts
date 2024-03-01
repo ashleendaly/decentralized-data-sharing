@@ -7,13 +7,12 @@ import { ethEncrypt } from "@/utils/metamask";
 
 const keygenSchema = z.object({
   pol_json: z.string(),
-  ethPk: z.string(),
+  ethPk: z.instanceof(Buffer),
 });
 
 export async function POST(request: Request) {
   const req = await request.json();
   const { pol_json, ethPk } = keygenSchema.parse(req);
-  const publicKey = Buffer.from(ethPk, "base64");
 
   const client = createClient();
   const { data: keys } = await client.from("keys").select("type,key");
@@ -28,7 +27,7 @@ export async function POST(request: Request) {
     if (pk && msk) {
       const result = keygen(pk["key"], msk["key"], pol_json); // pk_json: string, msk_json: string, pol_json: string
       const sk = Buffer.from(result);
-      const encryptedSk = ethEncrypt(publicKey, sk);
+      const encryptedSk = ethEncrypt(ethPk, sk);
       return NextResponse.json({ encryptedSk });
     }
   });
