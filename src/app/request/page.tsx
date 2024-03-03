@@ -5,14 +5,18 @@ import init, { decrypt } from "../../../public/rabe/rabe_wasm";
 import wasmUrl from "../../../wasm_config";
 import { useContext, useEffect, useState } from "react";
 import { EthersContext } from "@/contexts/ethers";
-import { ethDecrypt } from "@/utils/metamask";
+import { ethDecrypt, signMessage } from "@/utils/metamask";
 import { generateEncryptedSecretKey } from "@/utils/secretKeyGeneration";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { BigNumber, ethers } from "ethers";
+import AttributeTokenContract from "../../contracts/AttributeToken.json";
 
 const Page = () => {
+  const attributeTokenAddress = process.env.NEXT_PUBLIC_ATTRIBUTE_ADDRESS || "";
+
   const storage = useStorage();
-  const { metaMaskAddresss, metaMaskPk } = useContext(EthersContext);
+  const { metaMaskAddresss, metaMaskPk, signer } = useContext(EthersContext);
 
   const [ipfsUri, setIpfsUri] = useState<string>("");
   const [secretKey, mySecretKey] = useState<string>("");
@@ -20,7 +24,33 @@ const Page = () => {
 
   useEffect(() => {
     const getAndDecryptSecretKey = async () => {
-      const data = await generateEncryptedSecretKey(["A"], metaMaskPk!); // GET attribute list via smart contract
+      const { hashedMessage, v, r, s } = await signMessage(
+        metaMaskAddresss,
+        metaMaskAddresss
+      );
+
+      const contract = new ethers.Contract(
+        attributeTokenAddress,
+        AttributeTokenContract.abi,
+        signer
+      );
+
+      const attributes = await contract.generateAttributeList(
+        metaMaskAddresss,
+        hashedMessage,
+        v,
+        r,
+        s
+      );
+      const attributeNumber: string[] = attributes.map((attr: BigNumber) => {
+        return `${Number(attr)}`;
+      });
+
+      console.log("Transaction successful:", attributeNumber);
+      const data = await generateEncryptedSecretKey(
+        attributeNumber,
+        metaMaskPk!
+      );
       const encryptedSk = data["encryptedSk"];
       const decryptedSk = await ethDecrypt(metaMaskAddresss, encryptedSk);
       return decryptedSk;
@@ -31,7 +61,7 @@ const Page = () => {
         mySecretKey(secretKey);
       })
       .catch(console.error);
-  }, [metaMaskAddresss, metaMaskPk]);
+  }, [attributeTokenAddress, metaMaskAddresss, metaMaskPk, signer]);
 
   const handleDecrypt = async () => {
     if (ipfsUri) {

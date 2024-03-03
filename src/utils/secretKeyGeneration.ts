@@ -1,14 +1,14 @@
 export async function generateEncryptedSecretKey(
-  attributeList: string[],
+  attributes: string[],
   ethPk: Buffer
 ) {
-  const res = await fetch(`/api/keygen`, {
+  const res = await fetch(`/api/generatekey`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      pol_json: JSON.stringify(attributeList),
+      attributes: attributes,
       ethPk: ethPk,
     }),
   });
