@@ -9,7 +9,7 @@ import { EthersContext } from "@/contexts/ethers";
 export default function MintTokens() {
   const contractAddress = process.env.NEXT_PUBLIC_ATTRIBUTE_ADDRESS;
 
-  const { signer } = useContext(EthersContext);
+  const { signer, metaMaskAddresss } = useContext(EthersContext);
   const [id, setId] = useState(0);
   const [amount, setAmount] = useState(0);
 
@@ -18,14 +18,17 @@ export default function MintTokens() {
 
   const mintTokens = async (event: any) => {
     event.preventDefault();
-    const address = await signer.getAddress();
     const contract = new ethers.Contract(
       contractAddress,
       AttributeTokenContract.abi,
       signer
     );
     try {
-      const transaction = await contract.mintNewToken(address, id, amount);
+      const transaction = await contract.mintNewToken(
+        metaMaskAddresss,
+        id,
+        amount
+      );
       await transaction.wait();
       console.log("Transaction successful:", transaction);
     } catch (error) {

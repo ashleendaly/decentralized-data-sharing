@@ -8,8 +8,8 @@ export function Providers({ children }: { children: ReactNode }) {
   return (
     <EthersProvider>
       <ThirdwebProvider
-        clientId={process.env.THIRDWEB_CLIENT_ID}
-        secretKey={process.env.THIRDWEB_API_KEY}
+        clientId={process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID}
+        secretKey={process.env.NEXT_PUBLIC_THIRDWEB_API_KEY}
         authConfig={{
           domain: process.env.APP_URL || "localhost:3000",
           authUrl: "/api/auth",

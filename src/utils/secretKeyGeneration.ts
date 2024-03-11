@@ -1,6 +1,6 @@
 export async function generateEncryptedSecretKey(
   attributes: string[],
-  ethPk: Buffer
+  ethPk: string
 ) {
   const res = await fetch(`/api/generatekey`, {
     method: "POST",
@@ -13,7 +13,9 @@ export async function generateEncryptedSecretKey(
     }),
   });
   if (!res.ok) {
-    throw new Error("Failed to fetch data");
+    const errorBody = await res.json();
+    const errorMessage = errorBody.message || "Unknown error";
+    throw new Error(`Error ${res.status}: ${errorMessage}`);
   }
   return res.json();
 }

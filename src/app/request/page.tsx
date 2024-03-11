@@ -46,10 +46,9 @@ const Page = () => {
         return `${Number(attr)}`;
       });
 
-      console.log("Transaction successful:", attributeNumber);
       const data = await generateEncryptedSecretKey(
         attributeNumber,
-        metaMaskPk!
+        metaMaskPk
       );
       const encryptedSk = data["encryptedSk"];
       const decryptedSk = await ethDecrypt(metaMaskAddresss, encryptedSk);

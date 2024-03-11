@@ -4,13 +4,13 @@ import { ethers } from "ethers";
 type EthersContextType = {
   signer: ethers.providers.JsonRpcSigner | undefined;
   metaMaskAddresss: string;
-  metaMaskPk: Buffer | undefined;
+  metaMaskPk: string;
 };
 
 export const EthersContext = createContext<EthersContextType>({
   signer: undefined,
   metaMaskAddresss: "",
-  metaMaskPk: undefined,
+  metaMaskPk: "",
 });
 
 interface EthersProviderProps {
@@ -23,7 +23,7 @@ const EthersProvider: React.FC<EthersProviderProps> = ({ children }) => {
   >(undefined);
 
   const [metaMaskAddresss, setMetaMaskAddresss] = useState<string>("");
-  const [metaMaskPk, setMetaMaskPk] = useState<Buffer | undefined>(undefined);
+  const [metaMaskPk, setMetaMaskPk] = useState<string>("");
 
   useEffect(() => {
     async function initializeEthers() {
@@ -39,8 +39,7 @@ const EthersProvider: React.FC<EthersProviderProps> = ({ children }) => {
           method: "eth_getEncryptionPublicKey",
           params: [address],
         })) as string;
-        const pkBuffer = Buffer.from(pkString, "base64");
-        setMetaMaskPk(pkBuffer);
+        setMetaMaskPk(pkString);
       }
     }
 

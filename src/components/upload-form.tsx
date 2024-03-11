@@ -1,16 +1,15 @@
 "use client";
 
-import {
-  useContract,
-  useContractWrite,
-  useStorageUpload,
-} from "@thirdweb-dev/react";
+import { useStorageUpload } from "@thirdweb-dev/react";
 import init, { encrypt } from "../../public/rabe/rabe_wasm";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useContext, useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Trash, Plus } from "lucide-react";
 import wasmUrl from "../../wasm_config";
+import { ethers } from "ethers";
+import { EthersContext } from "@/contexts/ethers";
+import IPFSUploader from "../contracts/IPFSUploader.json";
 
 interface ipfsData {
   [key: string]: string;
@@ -21,31 +20,27 @@ interface DataFormProps {
 }
 
 export default function UploadForm({ pk }: DataFormProps) {
+  const { signer, metaMaskAddresss } = useContext(EthersContext);
   const [newProperty, setNewProperty] = useState<string>("");
   const [dataToUploadToIpfs, setDataToUploadToIpfs] = useState<ipfsData>({});
   const [policyString, setPolicyString] = useState<string>("");
   const { mutateAsync: upload } = useStorageUpload();
 
-  const { contract } = useContract(
-    "0xe4f1D0F6529F7583AbBf97d2FB0400b49a887CaC"
-  );
-
-  const { mutateAsync: uploadSmartContract } = useContractWrite(
-    contract,
-    "upload"
-  );
-
   const uploadToSmartContract = async (
     ipfsHash: string,
     policyString: string
   ) => {
+    const contract = new ethers.Contract(
+      "0xF7e95a6ee85AdeDBCCaF1Ee3c5b272b0971aE6E4",
+      IPFSUploader.abi,
+      signer
+    );
     try {
-      const data = await uploadSmartContract({
-        args: [ipfsHash, policyString],
-      });
-      console.info("contract call successs", data);
-    } catch (err) {
-      console.error("contract call failure", err);
+      const transaction = await contract.upload(ipfsHash, policyString);
+      await transaction.wait();
+      console.log("Transaction successful:", transaction);
+    } catch (error) {
+      console.error("Error minting new tokens:", error);
     }
   };
 
@@ -79,7 +74,6 @@ export default function UploadForm({ pk }: DataFormProps) {
     policyString: string,
     plaintextString: string
   ) => {
-    console.log(policyString);
     return init(wasmUrl).then(() => {
       const plaintext = new TextEncoder().encode(plaintextString);
       const result = encrypt(pk, policyString, plaintext);
@@ -91,7 +85,6 @@ export default function UploadForm({ pk }: DataFormProps) {
     event.preventDefault();
 
     const dataToUploadString = JSON.stringify(dataToUploadToIpfs);
-    console.log(dataToUploadString);
     const ciphertext = await handleEncrypt(
       pk,
       policyString,

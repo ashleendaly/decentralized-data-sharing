@@ -19,8 +19,7 @@ export async function POST(request: Request) {
 
   return await init(wasmUrl).then(() => {
     if (pk && msk) {
-      const result = keygen(pk["key"], msk["key"], JSON.stringify(attributes)); // pk_json: string, msk_json: string, pol_json: string
-      const sk = Buffer.from(result);
+      const sk = keygen(pk["key"], msk["key"], JSON.stringify(attributes)); // pk_json: string, msk_json: string, pol_json: string
       const encryptedSk = ethEncrypt(ethPk, sk);
       return NextResponse.json({ encryptedSk });
     }
