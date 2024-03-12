@@ -1,6 +1,5 @@
 "use client";
 
-import { useContract, useContractRead } from "@thirdweb-dev/react";
 import IPFSUploader from "../contracts/IPFSUploader.json";
 import { Input } from "./ui/input";
 import { useContext, useState } from "react";
