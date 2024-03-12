@@ -20,18 +20,19 @@ interface DataFormProps {
 }
 
 export default function UploadForm({ pk }: DataFormProps) {
-  const { signer, metaMaskAddresss } = useContext(EthersContext);
+  const { signer } = useContext(EthersContext);
   const [newProperty, setNewProperty] = useState<string>("");
   const [dataToUploadToIpfs, setDataToUploadToIpfs] = useState<ipfsData>({});
   const [policyString, setPolicyString] = useState<string>("");
   const { mutateAsync: upload } = useStorageUpload();
+  const contractAddress = process.env.NEXT_PUBLIC_IPFSUPLOADER_ADDRESS || "";
 
   const uploadToSmartContract = async (
     ipfsHash: string,
     policyString: string
   ) => {
     const contract = new ethers.Contract(
-      "0xF7e95a6ee85AdeDBCCaF1Ee3c5b272b0971aE6E4",
+      contractAddress,
       IPFSUploader.abi,
       signer
     );

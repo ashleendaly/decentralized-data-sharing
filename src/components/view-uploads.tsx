@@ -1,34 +1,44 @@
 "use client";
 
 import { useContract, useContractRead } from "@thirdweb-dev/react";
+import IPFSUploader from "../contracts/IPFSUploader.json";
 import { Input } from "./ui/input";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { Button } from "./ui/button";
+import { ethers } from "ethers";
+import { EthersContext } from "@/contexts/ethers";
 
 const ViewUploads = () => {
   const [lookupAddress, setLookupAddress] = useState("");
-  const { contract } = useContract(
-    "0xe4f1D0F6529F7583AbBf97d2FB0400b49a887CaC"
-  );
-  const { data } = useContractRead(contract, "uploads", [lookupAddress]);
+  const { signer } = useContext(EthersContext);
+  const contractAddress = process.env.NEXT_PUBLIC_IPFSUPLOADER_ADDRESS || "";
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    const contract = new ethers.Contract(
+      contractAddress,
+      IPFSUploader.abi,
+      signer
+    );
+    try {
+      const transaction = await contract.getAllUploadsForAddress(lookupAddress);
+      console.log("Transaction successful:", transaction);
+    } catch (error) {
+      console.error("Error minting new tokens:", error);
+    }
+  };
 
   return (
-    <div className="flex flex-col gap-2">
-      <form className="flex flex-col w-1/3 gap-5">
-        <div className="flex items-center">
-          <Input
-            placeholder="Lookup an address..."
-            value={lookupAddress}
-            onChange={(event) => setLookupAddress(event.target.value)}
-          />
-        </div>
-      </form>
-      {data && (
-        <div className="flex flex-col">
-          <div>{data[1]}</div>
-          <div>{data[2]}</div>
-        </div>
-      )}
-    </div>
+    <form onSubmit={handleSubmit} className="flex flex-col w-1/2 gap-3">
+      <div className="flex items-center">
+        <Input
+          placeholder="Lookup an address..."
+          value={lookupAddress}
+          onChange={(event) => setLookupAddress(event.target.value)}
+        />
+        <Button type="submit">Submit</Button>
+      </div>
+    </form>
   );
 };
 
