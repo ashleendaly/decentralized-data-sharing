@@ -25,12 +25,19 @@ export default function MintTokens() {
       signer
     );
     try {
-      const transaction = await contract.mintNewToken(
-        metaMaskAddresss,
-        id,
-        amount
-      );
-      await transaction.wait();
+      const doesTokenExist = await contract.tokenCreators(id);
+      let transaction;
+      if (doesTokenExist) {
+        transaction = await contract.mintExistingToken(
+          metaMaskAddresss,
+          id,
+          amount
+        );
+        await transaction.wait();
+      } else {
+        transaction = await contract.mintNewToken(metaMaskAddresss, id, amount);
+        await transaction.wait();
+      }
       console.log("Transaction successful:", transaction);
     } catch (error) {
       console.error("Error minting new tokens:", error);
