@@ -7,12 +7,13 @@ import AttributeTokenContract from "../contracts/AttributeToken.json";
 import { EthersContext } from "@/contexts/ethers";
 import { Label } from "./ui/label";
 
-export default function MintTokens() {
+export default function TransferTokens() {
   const contractAddress = process.env.NEXT_PUBLIC_ATTRIBUTE_ADDRESS;
 
   const { signer, metaMaskAddresss } = useContext(EthersContext);
   const [id, setId] = useState(0);
   const [amount, setAmount] = useState(0);
+  const [receiver, setReceiver] = useState("");
 
   if (!signer) return;
   if (!contractAddress) return;
@@ -25,10 +26,12 @@ export default function MintTokens() {
       signer
     );
     try {
-      const transaction = await contract.mintNewToken(
+      const transaction = await contract.safeTransferFrom(
         metaMaskAddresss,
+        receiver,
         id,
-        amount
+        amount,
+        "0x00"
       );
       await transaction.wait();
       console.log("Transaction successful:", transaction);
@@ -53,6 +56,14 @@ export default function MintTokens() {
           placeholder="amount..."
           value={amount}
           onChange={(e) => setAmount(parseInt(e.target.value))}
+        />
+      </div>
+      <div className="flex items-center gap-2">
+        <Label>RecieverAddress</Label>
+        <Input
+          placeholder="receiver..."
+          value={receiver}
+          onChange={(e) => setReceiver(e.target.value)}
         />
       </div>
       <Button type="submit">Submit</Button>
