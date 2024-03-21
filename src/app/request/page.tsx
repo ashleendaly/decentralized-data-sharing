@@ -9,12 +9,8 @@ import { ethDecrypt, signMessage } from "@/utils/metamask";
 import { generateEncryptedSecretKey } from "@/utils/secretKeyGeneration";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { BigNumber, ethers } from "ethers";
-import AttributeTokenContract from "../../contracts/AttributeToken.json";
 
 const Page = () => {
-  const attributeTokenAddress = process.env.NEXT_PUBLIC_ATTRIBUTE_ADDRESS || "";
-
   const storage = useStorage();
   const { metaMaskAddresss, metaMaskPk, signer } = useContext(EthersContext);
 
@@ -29,25 +25,12 @@ const Page = () => {
         metaMaskAddresss
       );
 
-      const contract = new ethers.Contract(
-        attributeTokenAddress,
-        AttributeTokenContract.abi,
-        signer
-      );
-
-      const attributes = await contract.generateAttributeList(
+      const data = await generateEncryptedSecretKey(
         metaMaskAddresss,
-        hashedMessage,
+        hashedMessage!,
         v,
         r,
-        s
-      );
-      const attributeNumber: string[] = attributes.map((attr: BigNumber) => {
-        return `${Number(attr)}`;
-      });
-
-      const data = await generateEncryptedSecretKey(
-        attributeNumber,
+        s,
         metaMaskPk
       );
       const encryptedSk = data["encryptedSk"];
@@ -60,7 +43,7 @@ const Page = () => {
         mySecretKey(secretKey);
       })
       .catch(console.error);
-  }, [attributeTokenAddress, metaMaskAddresss, metaMaskPk, signer]);
+  }, [metaMaskAddresss, metaMaskPk, signer]);
 
   const handleDecrypt = async () => {
     if (ipfsUri) {
