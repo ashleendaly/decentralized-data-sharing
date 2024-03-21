@@ -11,7 +11,8 @@ const Upload = async () => {
   const pk = data[0]["key"];
 
   return (
-    <div className="grid place-items-center h-[95vh]">
+    <div className=" p-5 flex flex-col items-center  gap-2">
+      <div className="text-3xl font-semibold">Upload Data</div>
       <UploadForm pk={pk} />
     </div>
   );

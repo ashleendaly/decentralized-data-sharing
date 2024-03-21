@@ -59,8 +59,9 @@ const Page = () => {
   };
 
   return (
-    <div className="h-[95vh] flex flex-col items-center justify-center gap-2">
-      <div className="flex w-1/3">
+    <div className="p-5 flex flex-col items-center gap-2">
+      <div className="text-3xl font-semibold">Request Data</div>
+      <div className="flex w-1/2 md:w-3/4">
         <Input
           value={ipfsUri}
           onChange={(event) => setIpfsUri(event.target.value)}

@@ -34,7 +34,7 @@ const ViewUploads = () => {
   };
 
   return (
-    <div className="flex flex-col w-1/2 gap-5">
+    <div className="flex flex-col w-1/2 md:w-3/4 gap-5">
       <form onSubmit={handleSubmit}>
         <div className="flex items-center">
           <Input
