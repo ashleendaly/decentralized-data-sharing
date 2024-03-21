@@ -7,9 +7,9 @@ import { Providers } from "./providers";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Decentralised Personal Data Manager",
+  title: "Decentralised Data Sharing Scheme",
   description:
-    "A personal data manager application that is powered by the InterPlanetary FileSystem and Ethereum blockchain.",
+    "A data sharing scheme powered by the IPFS, Ethereum and CP-ABE.",
 };
 
 export default function RootLayout({
