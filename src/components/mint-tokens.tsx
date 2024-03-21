@@ -25,7 +25,10 @@ export default function MintTokens() {
       signer
     );
     try {
-      const doesTokenExist = await contract.tokenCreators(id);
+      const doesTokenExist =
+        (await contract.tokenCreators(id)) !=
+        "0x0000000000000000000000000000000000000000";
+      console.log(doesTokenExist);
       let transaction;
       if (doesTokenExist) {
         transaction = await contract.mintExistingToken(
