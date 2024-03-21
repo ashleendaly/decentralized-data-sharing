@@ -63,6 +63,7 @@ const Page = () => {
       <div className="text-3xl font-semibold">Request Data</div>
       <div className="flex w-1/2 md:w-3/4">
         <Input
+          placeholder="Enter ipfs url..."
           value={ipfsUri}
           onChange={(event) => setIpfsUri(event.target.value)}
         ></Input>

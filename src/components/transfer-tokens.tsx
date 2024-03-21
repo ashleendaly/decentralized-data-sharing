@@ -41,7 +41,7 @@ export default function TransferTokens() {
   };
 
   return (
-    <form onSubmit={mintTokens} className="flex flex-col w-1/2 gap-3">
+    <form onSubmit={mintTokens} className="flex flex-col w-1/2 md:w-3/4 gap-3">
       <div className="flex items-center gap-2">
         <Label>TokenID</Label>
         <Input

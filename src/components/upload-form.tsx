@@ -96,7 +96,10 @@ export default function UploadForm({ pk }: DataFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col w-1/3 gap-5">
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col w-1/2 md:w-3/4 gap-5"
+    >
       <div className="flex items-center">
         <Input
           placeholder="Add property..."
