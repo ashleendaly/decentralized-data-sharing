@@ -28,7 +28,6 @@ export default function MintTokens() {
       const doesTokenExist =
         (await contract.tokenCreators(id)) !=
         "0x0000000000000000000000000000000000000000";
-      console.log(doesTokenExist);
       let transaction;
       if (doesTokenExist) {
         transaction = await contract.mintExistingToken(
@@ -48,7 +47,7 @@ export default function MintTokens() {
   };
 
   return (
-    <form onSubmit={mintTokens} className="flex flex-col w-1/2 gap-3">
+    <form onSubmit={mintTokens} className="flex flex-col w-1/2 md:w-3/4 gap-3">
       <div className="flex items-center gap-2">
         <Label>TokenID</Label>
         <Input
