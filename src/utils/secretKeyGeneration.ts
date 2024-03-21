@@ -1,5 +1,9 @@
 export async function generateEncryptedSecretKey(
-  attributes: string[],
+  metaMaskAddresss: string,
+  hashedMessage: string,
+  v: number,
+  r: number,
+  s: string,
   ethPk: string
 ) {
   const res = await fetch(`/api/generatekey`, {
@@ -8,8 +12,12 @@ export async function generateEncryptedSecretKey(
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      attributes: attributes,
-      ethPk: ethPk,
+      metaMaskAddresss,
+      hashedMessage,
+      v,
+      r,
+      s,
+      ethPk,
     }),
   });
   if (!res.ok) {
