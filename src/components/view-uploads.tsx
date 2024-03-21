@@ -9,6 +9,7 @@ import { EthersContext } from "@/contexts/ethers";
 
 const ViewUploads = () => {
   const [lookupAddress, setLookupAddress] = useState("");
+  const [transactionResponse, setTransactionResponse] = useState([]);
   const { signer } = useContext(EthersContext);
   const contractAddress = process.env.NEXT_PUBLIC_IPFSUPLOADER_ADDRESS || "";
 
@@ -21,23 +22,52 @@ const ViewUploads = () => {
     );
     try {
       const transaction = await contract.getAllUploadsForAddress(lookupAddress);
-      console.log("Transaction successful:", transaction);
+      const parsedTransaction = transaction[1].map(
+        (key: string, index: number) => {
+          return { ipfshash: [key], policy: transaction[0][index] };
+        }
+      );
+      setTransactionResponse(parsedTransaction);
     } catch (error) {
       console.error("Error minting new tokens:", error);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col w-1/2 gap-3">
-      <div className="flex items-center">
-        <Input
-          placeholder="Lookup an address..."
-          value={lookupAddress}
-          onChange={(event) => setLookupAddress(event.target.value)}
-        />
-        <Button type="submit">Submit</Button>
+    <div className="flex flex-col w-1/2 gap-5">
+      <form onSubmit={handleSubmit}>
+        <div className="flex items-center">
+          <Input
+            placeholder="Lookup an address..."
+            value={lookupAddress}
+            onChange={(event) => setLookupAddress(event.target.value)}
+          />
+          <Button type="submit">Submit</Button>
+        </div>
+      </form>
+      <div className="flex flex-col gap-2">
+        {transactionResponse &&
+          transactionResponse.map(
+            (transaction: { ipfshash: string; policy: string }) => {
+              return (
+                <div
+                  key={transaction.ipfshash}
+                  className="flex flex-col border rounded p-2"
+                >
+                  <div className="flex gap-1">
+                    <div className="font-bold">IPFS URI:</div>
+                    <div>{transaction.ipfshash}</div>
+                  </div>
+                  <div className="flex gap-1">
+                    <div className="font-bold">Access Policy:</div>
+                    <div>{transaction.policy}</div>
+                  </div>
+                </div>
+              );
+            }
+          )}
       </div>
-    </form>
+    </div>
   );
 };
 
