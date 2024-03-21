@@ -3,30 +3,29 @@ import init, { keygen } from "../../../../public/rabe/rabe_wasm";
 import wasmUrl from "../../../../wasm_config";
 import { createClient } from "@/lib/supabase";
 import { ethEncrypt } from "@/utils/metamask";
-import { BigNumber, ethers } from "ethers";
 import AttributeTokenContract from "../../../contracts/AttributeToken.json";
+import { createPublicClient, http, getContract } from "viem";
+import { sepolia } from "viem/chains";
 
 export async function POST(request: Request) {
-  const req = await request.json();
-  const { metaMaskAddresss, hashedMessage, v, r, s, ethPk } = req;
-  const attributeTokenAddress = process.env.NEXT_PUBLIC_ATTRIBUTE_ADDRESS || "";
-  const infura = process.env.INFURA_API_KEY || "";
-  const provider = new ethers.providers.InfuraProvider("sepolia", infura);
+  const { metaMaskAddresss, hashedMessage, v, r, s, ethPk } =
+    await request.json();
 
-  const contract = new ethers.Contract(
-    attributeTokenAddress,
-    AttributeTokenContract.abi,
-    provider
-  );
+  const publicClient = createPublicClient({
+    chain: sepolia,
+    transport: http(
+      `https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY || ""}`
+    ),
+  });
 
-  const attributes = await contract.generateAttributeList(
-    metaMaskAddresss,
-    hashedMessage,
-    v,
-    r,
-    s
-  );
-  const attributeNumber: string[] = attributes.map((attr: BigNumber) => {
+  const attributes = (await publicClient.readContract({
+    address: "0x4e83B956407E2a6FeFAD1F5AB1c19DC9f6A82df4",
+    abi: AttributeTokenContract.abi,
+    functionName: "generateAttributeList",
+    args: [metaMaskAddresss, hashedMessage, v, r, s],
+  })) as number[];
+
+  const attributeNumber: string[] = attributes.map((attr: number) => {
     return `${Number(attr)}`;
   });
 

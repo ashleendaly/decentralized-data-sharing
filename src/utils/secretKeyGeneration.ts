@@ -2,7 +2,7 @@ export async function generateEncryptedSecretKey(
   metaMaskAddresss: string,
   hashedMessage: string,
   v: number,
-  r: number,
+  r: string,
   s: string,
   ethPk: string
 ) {

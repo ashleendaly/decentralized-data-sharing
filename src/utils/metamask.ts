@@ -28,8 +28,8 @@ export async function signMessage(message: string, address: string) {
     method: "personal_sign",
     params: [hashedMessage, address],
   });
-  const r = signature.slice(0, 66);
-  const s = "0x" + signature.slice(66, 130);
+  const r = signature.slice(0, 66) as string;
+  const s = ("0x" + signature.slice(66, 130)) as string;
   const v = parseInt(signature.slice(130, 132), 16);
 
   return { hashedMessage, v, r, s };
