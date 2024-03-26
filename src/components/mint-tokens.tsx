@@ -57,7 +57,7 @@ export default function MintTokens() {
         />
       </div>
       <div className="flex items-center gap-2">
-        <Label>MintAmount</Label>
+        <Label>Amount</Label>
         <Input
           placeholder="amount..."
           value={amount}

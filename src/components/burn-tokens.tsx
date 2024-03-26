@@ -45,7 +45,7 @@ export default function BurnTokens() {
         />
       </div>
       <div className="flex items-center gap-2">
-        <Label>MintAmount</Label>
+        <Label>Amount</Label>
         <Input
           placeholder="amount..."
           value={amount}
@@ -53,7 +53,7 @@ export default function BurnTokens() {
         />
       </div>
       <div className="flex items-center gap-2">
-        <Label>RecieverAddress</Label>
+        <Label>Address</Label>
         <Input
           placeholder="receiver..."
           value={account}
