@@ -7,18 +7,18 @@ import AttributeTokenContract from "../contracts/AttributeToken.json";
 import { EthersContext } from "@/contexts/ethers";
 import { Label } from "./ui/label";
 
-export default function TransferTokens() {
+export default function BurnTokens() {
   const contractAddress = process.env.NEXT_PUBLIC_ATTRIBUTE_ADDRESS;
 
-  const { signer, metaMaskAddresss } = useContext(EthersContext);
+  const { signer } = useContext(EthersContext);
   const [id, setId] = useState(0);
   const [amount, setAmount] = useState(0);
-  const [receiver, setReceiver] = useState("");
+  const [account, setAccount] = useState("");
 
   if (!signer) return;
   if (!contractAddress) return;
 
-  const transferTokens = async (event: any) => {
+  const burnTokens = async (event: any) => {
     event.preventDefault();
     const contract = new ethers.Contract(
       contractAddress,
@@ -26,13 +26,7 @@ export default function TransferTokens() {
       signer
     );
     try {
-      const transaction = await contract.safeTransferFrom(
-        metaMaskAddresss,
-        receiver,
-        id,
-        amount,
-        "0x00"
-      );
+      const transaction = await contract.burn(account, id, amount);
       await transaction.wait();
       console.log("Transaction successful:", transaction);
     } catch (error) {
@@ -41,10 +35,7 @@ export default function TransferTokens() {
   };
 
   return (
-    <form
-      onSubmit={transferTokens}
-      className="flex flex-col w-1/2 md:w-3/4 gap-3"
-    >
+    <form onSubmit={burnTokens} className="flex flex-col w-1/2 md:w-3/4 gap-3">
       <div className="flex items-center gap-2">
         <Label>TokenID</Label>
         <Input
@@ -65,8 +56,8 @@ export default function TransferTokens() {
         <Label>RecieverAddress</Label>
         <Input
           placeholder="receiver..."
-          value={receiver}
-          onChange={(e) => setReceiver(e.target.value)}
+          value={account}
+          onChange={(e) => setAccount(e.target.value)}
         />
       </div>
       <Button type="submit">Submit</Button>
