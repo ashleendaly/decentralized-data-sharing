@@ -5,9 +5,10 @@ import AttributeTokenContract from "../contracts/AttributeToken.json";
 import { EthersContext } from "@/contexts/ethers";
 import { signMessage } from "@/utils/metamask";
 import { Button } from "./ui/button";
+import { attributeTokenSCAddress } from "../../sc_config";
 
 export default function MyTokens() {
-  const contractAddress = process.env.NEXT_PUBLIC_ATTRIBUTE_ADDRESS || "";
+  const contractAddress = attributeTokenSCAddress;
 
   const { signer, metaMaskAddresss } = useContext(EthersContext);
   const [attributes, setAttributes] = useState<undefined | []>(undefined);

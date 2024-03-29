@@ -6,12 +6,13 @@ import { useContext, useState } from "react";
 import { Button } from "./ui/button";
 import { ethers } from "ethers";
 import { EthersContext } from "@/contexts/ethers";
+import { ipfsUploaderSCAddress } from "../../sc_config";
 
 const ViewUploads = () => {
   const [lookupAddress, setLookupAddress] = useState("");
   const [transactionResponse, setTransactionResponse] = useState([]);
   const { signer } = useContext(EthersContext);
-  const contractAddress = process.env.NEXT_PUBLIC_IPFSUPLOADER_ADDRESS || "";
+  const contractAddress = ipfsUploaderSCAddress;
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();

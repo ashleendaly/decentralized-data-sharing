@@ -10,6 +10,7 @@ import wasmUrl from "../../wasm_config";
 import { ethers } from "ethers";
 import { EthersContext } from "@/contexts/ethers";
 import IPFSUploader from "../contracts/IPFSUploader.json";
+import { ipfsUploaderSCAddress } from "../../sc_config";
 
 interface ipfsData {
   [key: string]: string;
@@ -25,7 +26,7 @@ export default function UploadForm({ pk }: DataFormProps) {
   const [dataToUploadToIpfs, setDataToUploadToIpfs] = useState<ipfsData>({});
   const [policyString, setPolicyString] = useState<string>("");
   const { mutateAsync: upload } = useStorageUpload();
-  const contractAddress = process.env.NEXT_PUBLIC_IPFSUPLOADER_ADDRESS || "";
+  const contractAddress = ipfsUploaderSCAddress;
 
   const uploadToSmartContract = async (
     ipfsHash: string,

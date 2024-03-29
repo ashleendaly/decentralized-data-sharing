@@ -6,9 +6,10 @@ import { Button } from "./ui/button";
 import AttributeTokenContract from "../contracts/AttributeToken.json";
 import { EthersContext } from "@/contexts/ethers";
 import { Label } from "./ui/label";
+import { attributeTokenSCAddress } from "../../sc_config";
 
 export default function MintTokens() {
-  const contractAddress = process.env.NEXT_PUBLIC_ATTRIBUTE_ADDRESS;
+  const contractAddress = attributeTokenSCAddress;
 
   const { signer, metaMaskAddresss } = useContext(EthersContext);
   const [id, setId] = useState(0);

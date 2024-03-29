@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "build:app && build:rabe",
     "start": "next start",
     "lint": "next lint",
+    "build:app": "next build",
     "build:rabe": "wasm-pack build rabe-wasm --target web --out-dir ../public/rabe"
   },
   "dependencies": {
