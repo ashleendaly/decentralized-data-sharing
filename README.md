@@ -30,3 +30,12 @@ Before starting, ensure you have the following installed:
 - **Rust and Cargo**: Needed for compiling the Rust code. Cargo is Rust's package manager and build system.
 - **wasm-pack**: A tool for building Rust-generated WebAssembly packages for the web.
 - **A modern web browser**: For running and interacting with the web application.
+
+## Enviornment Variables
+
+`NEXT_PUBLIC_THIRDWEB_API_KEY`: The API key of the Thirdweb account used for connecting to IPFS
+`NEXT_PUBLIC_THIRDWEB_CLIENT_ID`: The client ID of the Thirdweb account used for connecting to IPFS
+`APPLICATION_DOMAIN`:"http://localhost:3000"
+`NEXT_PUBLIC_SUPABASE_URL`: The connection url to a supabase database
+`NEXT_PUBLIC_SUPABASE_ANON_KEY`: The anon key to a supabase database
+`INFURA_API_KEY`: The api key to an infura account

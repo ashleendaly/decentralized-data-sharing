@@ -6,6 +6,7 @@ import { ethEncrypt } from "@/utils/metamask";
 import AttributeTokenContract from "../../../contracts/AttributeToken.json";
 import { createPublicClient, http, getContract } from "viem";
 import { sepolia } from "viem/chains";
+import { attributeTokenSCAddress } from "../../../../sc_config";
 
 export async function POST(request: Request) {
   const { metaMaskAddresss, hashedMessage, v, r, s, ethPk } =
@@ -19,7 +20,7 @@ export async function POST(request: Request) {
   });
 
   const attributes = (await publicClient.readContract({
-    address: "0x4e83B956407E2a6FeFAD1F5AB1c19DC9f6A82df4",
+    address: attributeTokenSCAddress,
     abi: AttributeTokenContract.abi,
     functionName: "generateAttributeList",
     args: [metaMaskAddresss, hashedMessage, v, r, s],
