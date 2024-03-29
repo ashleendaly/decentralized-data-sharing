@@ -18,7 +18,7 @@ This repository contains the client and key-generation server for a blockchain-b
 1. **Install dependencies**: Run `pnpm i` to install the required Node.js packages.
 2. **Build the project**:
    - Compile the Rust package to WebAssembly: `pnpm run build:rabe`
-   - Build the web application: `pnpm run build:app`
+   - Build the web application: `pnpm run build`
 3. **Run the application**: Start the development server with `pnpm dev`.
 
 ## Requirements
