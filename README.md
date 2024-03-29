@@ -1,6 +1,6 @@
 # A Blockchain-based Data Sharing Scheme using Attribute-Based Encryption and Semi-Fungible Tokens
 
-This repository contains the client and key-generation server for a blockchain-based data-sharing scheme utilizing Ciphertext-Policy Attribute-Based Encryption (CP-ABE) and semi-fungible tokens. The project is structured to include a Rust package wrapped in WebAssembly, enabling high-performance cryptographic operations in the web environment.
+This repository contains the client and key-generation server for a blockchain-based data-sharing scheme utilizing Ciphertext-Policy Attribute-Based Encryption (CP-ABE) and semi-fungible tokens.
 
 ## Project Structure
 
