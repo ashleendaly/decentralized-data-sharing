@@ -34,8 +34,13 @@ Before starting, ensure you have the following installed:
 ## Enviornment Variables
 
 `NEXT_PUBLIC_THIRDWEB_API_KEY`: The API key of the Thirdweb account used for connecting to IPFS
+
 `NEXT_PUBLIC_THIRDWEB_CLIENT_ID`: The client ID of the Thirdweb account used for connecting to IPFS
-`APPLICATION_DOMAIN`:"http://localhost:3000"
+
+`APPLICATION_DOMAIN`: The domain that the application is currently running on. If running locally, this should be http://localhost:3000
+
 `NEXT_PUBLIC_SUPABASE_URL`: The connection url to a supabase database
+
 `NEXT_PUBLIC_SUPABASE_ANON_KEY`: The anon key to a supabase database
+
 `INFURA_API_KEY`: The api key to an infura account
